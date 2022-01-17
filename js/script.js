@@ -1,6 +1,7 @@
 //select the div class overview where your profile info wil appear
 const overview = document.querySelector(".overview"); 
 const userName = "tab-james";
+const repoList = document.querySelector(".repo-list"); 
 
 //fetch API JSON data
 const fetchProfileInfo = async function () {
@@ -28,4 +29,22 @@ const displayUserInfo = function (data) {
   </div>
   `; 
   overview.append(newDiv); 
+  getRepos(); 
 }; 
+
+//fetch your repos
+const getRepos = async function () {
+  const userRepos = await fetch(`https://api.github.com/users/${userName}/repos?sort=updated&per_page=100`);
+  const repoData = await userRepos.json(); 
+  displayRepoData(repoData);
+}; 
+
+//display info about your repos
+const displayRepoData = function (repos) {
+  for (const repo of repos) {
+    const repoItem = document.createElement("li");
+    repoItem.classList.add("repo");
+    repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+    repoList.append(repoItem);
+  }
+};
